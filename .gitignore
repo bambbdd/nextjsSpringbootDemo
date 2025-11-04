@@ -1,0 +1,49 @@
+# ---------------------------------
+# OS / System Files
+# ---------------------------------
+.DS_Store
+Thumbs.db
+
+# ---------------------------------
+# IDE (IntelliJ, VSCode)
+# ---------------------------------
+.idea/
+*.iml
+.vscode/
+
+# ---------------------------------
+# Build Outputs
+# ---------------------------------
+out/
+build/
+target/
+*.log
+
+# ---------------------------------
+# Java / Spring Boot
+# ---------------------------------
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+*~
+
+# ---------------------------------
+# Node / React / Next.js
+# ---------------------------------
+# (이게 제일 중요합니다. 용량 괴물)
+node_modules/
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# (Next.js 빌드 결과물)
+.next/
+
+# (Create React App 빌드 결과물)
+# build/  (위에서 이미 포함됨)
+
+# (Vite 빌드 결과물)
+dist/
