@@ -3,6 +3,8 @@ package com.bambbdd.domain.article.controller;
 import com.bambbdd.domain.article.entity.Article;
 import com.bambbdd.domain.article.service.ArticleService;
 import com.bambbdd.global.rsData.RsData;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,19 +20,31 @@ import java.util.List;
 public class ApiV1ArticleController {
     private final ArticleService articleService;
 
+    @Getter
+    @AllArgsConstructor
+    public static class ArticlesResponse { // 요소가 많아질 수도 있으니 객체로 통합
+        private final List<Article> articles;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ArticleResponse { // 요소가 많아질 수도 있으니 객체로 통합
+        private final Article article;
+    }
+
     @GetMapping("")
-    public RsData<List<Article>> getArticles() {
+    public RsData<ArticlesResponse> getArticles() {
         List<Article> articles = articleService.getList();
-        return RsData.of("S-1", "성공", articles);
+        return RsData.of("S-1", "성공", new ArticlesResponse(articles));
     }
 
     @GetMapping("/{id}")
-    public RsData<Article> getArticle(@PathVariable("id") Long id) {
+    public RsData<ArticleResponse> getArticle(@PathVariable("id") Long id) {
         return articleService.getArticle(id).map(article -> RsData.of(
 
                 "S-1",
                 "성공",
-                article
+                new ArticleResponse(article)
         )).orElseGet(() -> RsData.of(
 
                 "F-1",
