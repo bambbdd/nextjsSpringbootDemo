@@ -1,0 +1,10 @@
+# 홈
+/ => page.tsx
+
+# 게시판
+/article => page.tsx
+
+# 소개
+/about => page.tsx
+/about/vision
+/about/info
