@@ -2,6 +2,8 @@ package com.bambbdd.domain.article.service;
 
 import com.bambbdd.domain.article.entity.Article;
 import com.bambbdd.domain.article.repository.ArticleRepository;
+import com.bambbdd.global.rsData.RsData;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,20 @@ public class ArticleService {
         return articleRepository.findById(id);
     }
 
-    public void create(String subject, String content) {
+    @Transactional
+    public RsData<Article> create(String subject, String content) {
         Article article = Article.builder()
                 .subject(subject)
                 .content(content)
                 .build();
 
         articleRepository.save(article);
+
+        return RsData.of(
+                "S-2",
+                "게시물이 생성되었습니다.",
+                article
+        );
     }
 
 }
