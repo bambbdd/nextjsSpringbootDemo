@@ -3,13 +3,13 @@ package com.bambbdd.domain.article.controller;
 import com.bambbdd.domain.article.entity.Article;
 import com.bambbdd.domain.article.service.ArticleService;
 import com.bambbdd.global.rsData.RsData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +48,35 @@ public class ApiV1ArticleController {
         )).orElseGet(() -> RsData.of(
 
                 "F-1",
-                "%d번 게시물은 존재하지 않습니다.".formatted(id),
-                null
+                "%d번 게시물은 존재하지 않습니다.".formatted(id)
         ));
+    }
+
+    @Data
+    public static class WriteRequest {
+        @NotBlank
+        private String subject;
+
+        @NotBlank
+        private String content;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class WriteResponse { // 요소가 많아질 수도 있으니 객체로 통합
+        private final Article article;
+    }
+
+    @PostMapping("")
+    public RsData<WriteResponse> write(@Valid @RequestBody WriteRequest writeRequest) {
+        RsData<Article> writeRs = articleService.create(writeRequest.getSubject(), writeRequest.getContent());
+
+        if ( writeRs.isFail() ) return (RsData) writeRs;
+
+        return RsData.of(
+                writeRs.getResultCode(),
+                writeRs.getMsg(),
+                new WriteResponse(writeRs.getData())
+        );
     }
 }
