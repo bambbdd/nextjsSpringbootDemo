@@ -1,16 +1,17 @@
 package com.bambbdd.global.jwt;
 
+import com.bambbdd.domain.member.entity.Member;
 import com.bambbdd.global.util.Util;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
+@Component
 public class JwtProvider {
     @Value("${custom.jwt.secretKey}")
     private String secretKeyOrigin;
@@ -26,7 +27,13 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
     }
 
-    public String getToken(Map<String, Object> claims, int seconds) {
+    public String genToken(Member member, int seconds) {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("id", member.getId());
+        claims.put("username", member.getUsername());
+
+
         long now = new Date().getTime();
 
         Date accessTokenExpiresIn = new Date(now + 1000L * seconds);

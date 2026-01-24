@@ -20,8 +20,8 @@ public class NotProd {
 
             // 회원 3명 추가
             Member admin = memberService.join("admin", password, "admin@test.com");
-            Member user1 = memberService.join("admin", password, "user1@test.com");
-            Member user2 = memberService.join("admin", password, "user2@test.com");
+            Member user1 = memberService.join("user1", password, "user1@test.com");
+            Member user2 = memberService.join("user2", password, "user2@test.com");
 
             // 게시물 추가
             articleService.create(admin, "제목 1", "내용 1");

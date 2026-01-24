@@ -1,10 +1,13 @@
 package com.bambbdd.domain.member.controller;
 
+import com.bambbdd.domain.member.entity.Member;
 import com.bambbdd.domain.member.service.MemberService;
+import com.bambbdd.global.rsData.RsData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -12,8 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiV1MemberController {
     private final MemberService memberService;
 
-    @GetMapping("/test")
-    public String memberTest() {
-        return "멤버 테스트";
+    @Getter
+    public static class LoginRequestBody {
+        @NotBlank
+        public String username;
+        @NotBlank
+        public String password;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class LoginResponseBody {
+            private Member member;
+    }
+
+    @PostMapping("/login")
+    public RsData<LoginResponseBody> login(@Valid @RequestBody LoginRequestBody loginRequestBody) {
+        // username, password => accessToken
+        memberService.authAndMakeTokens(loginRequestBody.getUsername(), loginRequestBody.getPassword());
+
+
+        return RsData.of("ok", "ok");
     }
 }
