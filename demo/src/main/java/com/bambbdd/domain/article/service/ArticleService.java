@@ -2,6 +2,7 @@ package com.bambbdd.domain.article.service;
 
 import com.bambbdd.domain.article.entity.Article;
 import com.bambbdd.domain.article.repository.ArticleRepository;
+import com.bambbdd.domain.member.entity.Member;
 import com.bambbdd.global.rsData.RsData;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +26,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public RsData<Article> create(String subject, String content) {
+    public RsData<Article> create(Member member, String subject, String content) {
         Article article = Article.builder()
                 .subject(subject)
                 .content(content)
