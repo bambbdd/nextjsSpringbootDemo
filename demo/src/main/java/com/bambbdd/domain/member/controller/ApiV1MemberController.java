@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ApiV1MemberController {
     private final MemberService memberService;
+    private final HttpServletResponse resp;
 
     @Getter
     public static class LoginRequestBody {
@@ -37,14 +38,9 @@ public class ApiV1MemberController {
         // username, password => accessToken
         RsData<MemberService.AuthAndMakeTokensResponseBody> authAndMakeTokensRs = memberService.authAndMakeTokens(loginRequestBody.getUsername(), loginRequestBody.getPassword());
 
-        ResponseCookie cookie = ResponseCookie.from("accessToken", authAndMakeTokensRs.getData().getAccessToken())
-                .path("/")
-                .sameSite("None")
-                .secure(true)
-                .httpOnly(true)
-                .build();
+        _addHeaderCookie("accessToken", authAndMakeTokensRs.getData().getAccessToken());
+        _addHeaderCookie("refreshToken", authAndMakeTokensRs.getData().getRefreshToken());
 
-        resp.addHeader("Set-Cookie", cookie.toString());
 
         return RsData.of(
                 authAndMakeTokensRs.getResultCode(),
@@ -56,5 +52,16 @@ public class ApiV1MemberController {
     @GetMapping("/me")
     public String me() {
         return "내 정보";
+    }
+
+    private void _addHeaderCookie(String tokenName, String token) {
+        ResponseCookie cookie = ResponseCookie.from(tokenName, token)
+                .path("/")
+                .sameSite("None")
+                .secure(true)
+                .httpOnly(true)
+                .build();
+
+        resp.addHeader("Set-Cookie", cookie.toString());
     }
 }
